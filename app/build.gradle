@@ -1,0 +1,82 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.multipleapk.r00we.buildmultipleapk"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug{
+            minifyEnabled true
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    splits {
+
+        // Создаем множество apk на основе плотности экрана
+        density {
+
+            // Сообщаем gradle что нам необходимо разделить apk по плотностям. По умолчанию false
+            enable true
+
+            // Определяем какие плотности нам не нужны, для них apk не будет собираться.
+            exclude "ldpi", "xxhdpi", "xxxhdpi"
+
+            // Определяем какие размеры экрана поддерживаем.
+            compatibleScreens 'small', 'normal', 'large', 'xlarge'
+
+            // Сбрасывает список плотностей для которых нужно собрать apk.
+            reset()
+
+            // Определяем какие плотности нам нужны, для них apk будет собираться.  Работает только в связке с reset()
+            include "ldpi", "xxhdpi"
+        }
+
+        abi {
+
+            // Enables building multiple APKs per ABI.
+            enable false
+
+            // ABIs - Application Binary Interface
+            // По умолчанию все ABIs включены. Application Binary Interface
+            // Сбрасывает список ABIs для которых нужно собрать apk.
+            reset()
+
+            // Определяем какие ABIs нам нужны, для них apk будет собираться.  Работает только в связке с reset()
+            include "x86", "armeabi-v7a", "mips"
+
+            // Указываем что мы не хотим собирать универсальное apk
+            universalApk true
+        }
+
+        // Только для instant apps
+        language {
+            enable = true
+            include "ru"
+        }
+
+    }
+
+}
+
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+//    compile 'com.github.barteksc:android-pdf-viewer:3.0.0-beta.5'
+}
